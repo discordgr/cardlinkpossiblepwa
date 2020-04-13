@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cardlinkpossiblepwa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cardlinkpossiblepwa
+  template:
+    metadata:
+      labels:
+        app: cardlinkpossiblepwa
+    spec:
+      containers:
+      - name: cardlinkpossiblepwa
+        image: uk.icr.io/cardlink/cardlinkpossiblepwa
+        
