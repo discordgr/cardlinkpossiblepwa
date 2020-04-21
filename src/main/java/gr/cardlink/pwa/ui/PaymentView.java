@@ -22,6 +22,7 @@ public class PaymentView {
 
     HorizontalLayout tipLayout;
     Checkbox tipCheckBox;
+    NumberField tipNumberField;
 
     Checkbox smsCheckBox;
     HorizontalLayout smsLayout;
@@ -69,8 +70,7 @@ public class PaymentView {
 
         amountNumberField.addValueChangeListener(k -> {
             if ( amountNumberField.getValue() != null ) {
-                double amount = amountNumberField.getValue();
-                totalAmount.setText("€" + amount);
+                totalAmount.setText("€" + amountNumberField.getValue());
             }
         });
     }
@@ -78,7 +78,7 @@ public class PaymentView {
     public void createTipLayout() {
         Text tipAmount = new Text("€0,00");
 
-        NumberField tipNumberField = new NumberField("Tip");
+        tipNumberField = new NumberField("Tip");
         tipNumberField.setId("Tip");
         tipNumberField.setValue(0.0);
         tipNumberField.addFocusListener(t -> {
@@ -94,7 +94,9 @@ public class PaymentView {
         });
 
         tipNumberField.addValueChangeListener(t -> {
-            tipAmount.setText("€" + tipNumberField.getValue());
+            if ( tipNumberField.getValue() != null ){
+                tipAmount.setText("€" +  tipNumberField.getValue());
+            }
         });
 
         tipLayout.setAlignItems(FlexComponent.Alignment.BASELINE);
@@ -103,7 +105,7 @@ public class PaymentView {
     }
 
     private void createSMSLayout() {
-        NumberField phoneNumberField = new NumberField("Mobile Phone Number");
+        NumberField phoneNumberField = new NumberField("Mobile Phone");
         phoneNumberField.setId("phoneNumber");
 
         smsCheckBox.addValueChangeListener(s -> {
