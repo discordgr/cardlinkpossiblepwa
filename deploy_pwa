@@ -15,4 +15,21 @@ spec:
       containers:
       - name: cardlinkpossiblepwa
         image: uk.icr.io/cardlink/cardlinkpossiblepwa
-        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cardlinkpossiblepwa
+  labels:
+    app: cardlinkpossiblepwa
+spec:
+  type: NodePort
+  selector:
+    app: cardlinkpossiblepwa
+  ports:
+      # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
+    - port: 80
+      targetPort: 8080
+      # Optional field
+      # By default and for convenience, the Kubernetes control plane will allocate a port from a range (default: 30000-32767)
+      nodePort: 30007
