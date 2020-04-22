@@ -12,7 +12,7 @@ window.sendSMS = function(){
                 "Installments: " + document.getElementById("Installments").value + "%0A" +
                 "Tip: €" + document.getElementById("Tip").value;
     var Http = new XMLHttpRequest();
-    var url= "http://192.168.2.2:8090/api/v1/sms?to=" + to + "&text=" + text;
+    var url= "http://172.21.200.73:8090/api/v1/sms?to=" + to + "&text=" + text;
     Http.open("POST", url);
     Http.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     Http.send();

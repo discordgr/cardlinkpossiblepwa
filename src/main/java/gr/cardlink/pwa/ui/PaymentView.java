@@ -124,8 +124,7 @@ public class PaymentView {
     private void setCurrencies(){
         currencies.setId("CurrencyList");
 
-        currencies.setItems("EUR");
-        currencies.setItems("DOL");
+        currencies.setItems("EUR", "USD");
 
         currencies.setValue("EUR");
     }
