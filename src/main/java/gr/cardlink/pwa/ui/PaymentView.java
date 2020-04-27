@@ -9,6 +9,16 @@ import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
+import gr.cardlink.pwa.utils.ParameterStringBuilder;
+import okhttp3.*;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PaymentView {
 
@@ -25,6 +35,7 @@ public class PaymentView {
     NumberField tipNumberField;
 
     Checkbox smsCheckBox;
+    NumberField phoneNumberField;
     HorizontalLayout smsLayout;
 
     Button checkOut;
@@ -105,7 +116,7 @@ public class PaymentView {
     }
 
     private void createSMSLayout() {
-        NumberField phoneNumberField = new NumberField("Mobile Phone");
+        phoneNumberField = new NumberField("Mobile Phone");
         phoneNumberField.setId("phoneNumber");
 
         smsCheckBox.addValueChangeListener(s -> {
@@ -132,14 +143,42 @@ public class PaymentView {
     public void setInstallmentsNumberField() {
         installmentsNumberField.setValue(0.0);
         installmentsNumberField.setId("Installments");
+        installmentsNumberField.addFocusListener(t -> {
+                installmentsNumberField.clear();
+        });
     }
 
     private void setCheckOut() {
-        checkOut.addClickListener(b -> {
+        /* Call JAVASCRIPT Functions
             if (smsCheckBox.isEnabled()) {
                 UI.getCurrent().getPage().executeJs("sendSMS()");
             }
             UI.getCurrent().getPage().executeJs("goToMobileApp()");
+             */
+        checkOut.addClickListener(b -> {
+            final OkHttpClient httpClient = new OkHttpClient();
+
+            String text = "Amount: €" + amountNumberField.getValue().toString() + "\nTip: €" + tipNumberField.getValue().toString() + "\nInstallments: " + installmentsNumberField.getValue().toString();
+
+            RequestBody formBody = new FormBody.Builder()
+                    .add("to", phoneNumberField.getValue().toString())
+                    .add("text", text)
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url("http://172.21.12.105:8080/api/v1/sms")
+                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .post(formBody)
+                    .build();
+
+            try (Response response = httpClient.newCall(request).execute()) {
+
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+                // Get response body
+                System.out.println(response.body().string());
+            } catch (IOException e) {
+                    e.printStackTrace();
+            }
         });
     }
 
